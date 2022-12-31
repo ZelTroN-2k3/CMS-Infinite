@@ -1,39 +1,37 @@
 <?php
-error_reporting(0);
+define('FCPATH', __DIR__ . DIRECTORY_SEPARATOR);
+chdir(__DIR__);
+$pathsConfig = FCPATH . '../app/Config/Paths.php';
+require realpath($pathsConfig) ?: $pathsConfig;
+$paths = new Config\Paths();
+$bootstrap = rtrim($paths->systemDirectory, '\\/ ') . DIRECTORY_SEPARATOR . 'bootstrap.php';
+$app = require realpath($bootstrap) ?: $bootstrap;
+$dbArray = new \Config\Database();
+$db_host = '';
+$db_user = '';
+$db_password = '';
+$db_name = '';
+if (!empty($dbArray) && !empty($dbArray->default)) {
+    $db_host = $dbArray->default['hostname'];
+    $db_user = $dbArray->default['username'];
+    $db_password = $dbArray->default['password'];
+    $db_name = $dbArray->default['database'];
+}
 require_once 'functions.php';
-require_once 'includes//Bcrypt.php';
-
-$cls = new Bcrypt();
-
 if (isset($_POST["btn_admin"])) {
-
-    $license_code = $_POST["license_code"];
-    $purchase_code = $_POST["purchase_code"];
-
-    if (!isset($license_code) || !isset($purchase_code)) {
-        header("Location: index.php");
-        exit();
-    }
-
     $timezone = trim($_POST['timezone']);
+    $base_url = trim($_POST['base_url']);
     $admin_username = trim($_POST['admin_username']);
     $admin_email = trim($_POST['admin_email']);
     $admin_password = trim($_POST['admin_password']);
 
-    $password = $cls->hash_password($admin_password);
+    $password = password_hash($admin_password, PASSWORD_DEFAULT);
     $slug = str_slug($admin_username);
 
-    /* Database Credentials */
-    defined("DB_HOST") ? null : define("DB_HOST", @$_COOKIE["db_host"]);
-    defined("DB_USER") ? null : define("DB_USER", @$_COOKIE["db_user"]);
-    defined("DB_PASS") ? null : define("DB_PASS", @$_COOKIE["db_password"]);
-    defined("DB_NAME") ? null : define("DB_NAME", @$_COOKIE["db_name"]);
-
     /* Connect */
-    $connection = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+    $connection = mysqli_connect($db_host, $db_user, $db_password, $db_name);
     $connection->query("SET CHARACTER SET utf8");
     $connection->query("SET NAMES utf8");
-
     /* check connection */
     if (mysqli_connect_errno()) {
         $error = 0;
@@ -41,11 +39,28 @@ if (isset($_POST["btn_admin"])) {
         $token = uniqid("", TRUE);
         $token = str_replace(".", "-", $token);
         $token = $token . "-" . rand(10000000, 99999999);
-        mysqli_query($connection, "INSERT INTO users (username, slug, email, password, token, role, status, user_type) VALUES ('" . $admin_username . "', '" . $slug . "', '" . $admin_email . "','" . $password . "','" . $token . "', 'admin', 1, 'registered')");
-        mysqli_query($connection, "UPDATE general_settings SET inf_key='" . $license_code . "', purchase_code='" . $purchase_code . "', timezone='" . $timezone . "' WHERE id='1'");
-
+        mysqli_query($connection, "INSERT INTO users (username, slug, email, password, token, role_id, status, user_type) VALUES ('" . $admin_username . "', '" . $slug . "', '" . $admin_email . "','" . $password . "','" . $token . "', 1, 1, 'registered')");
+        mysqli_query($connection, "UPDATE general_settings SET timezone='" . $timezone . "' WHERE id='1'");
         /* close connection */
         mysqli_close($connection);
+        /*write env file*/
+        $env = "#--------------------------------------------------------------------
+# ENVIRONMENT
+#--------------------------------------------------------------------
+CI_ENVIRONMENT = production
+
+#--------------------------------------------------------------------
+# APP
+#--------------------------------------------------------------------
+app.baseURL = " . trim($base_url) . "
+
+#--------------------------------------------------------------------
+# COOKIE
+#--------------------------------------------------------------------  
+cookie.prefix = 'inf'";
+        $handle = fopen("../.env", "w");
+        fwrite($handle, trim($env));
+        fclose($handle);
 
         $redir = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == "on") ? "https" : "http");
         $redir .= "://" . $_SERVER['HTTP_HOST'];
@@ -54,54 +69,33 @@ if (isset($_POST["btn_admin"])) {
         header("refresh:5;url=" . $redir);
         $success = 1;
     }
-
-} else {
-    $license_code = $_GET["license_code"];
-    $purchase_code = $_GET["purchase_code"];
-
-    if (!isset($license_code) || !isset($purchase_code)) {
-        header("Location: index.php");
-        exit();
-    }
-}
-
-?>
-
+} ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Infinite - Installer</title>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../assets/vendor/bootstrap/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,700" rel="stylesheet">
-    <!-- Font-awesome CSS -->
     <link href="../assets/admin/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet"/>
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
-
 <div class="container">
     <div class="row">
         <div class="col-md-8 col-sm-12 col-md-offset-2">
-
             <div class="row">
                 <div class="col-sm-12 logo-cnt">
                     <h1>Infinite</h1>
                     <p>Welcome to the Installer</p>
                 </div>
             </div>
-
             <div class="row">
                 <div class="col-sm-12">
-
                     <div class="install-box">
-
-
                         <div class="steps">
                             <div class="step-progress">
                                 <div class="step-progress-line" data-now-value="100" data-number-of-steps="5" style="width: 100%;"></div>
@@ -124,10 +118,9 @@ if (isset($_POST["btn_admin"])) {
                             </div>
                             <div class="step active">
                                 <div class="step-icon"><i class="fa fa-user"></i></div>
-                                <p>Admin</p>
+                                <p>Settings</p>
                             </div>
                         </div>
-
                         <div class="messages">
                             <?php if (isset($error)) { ?>
                                 <div class="alert alert-danger">
@@ -153,15 +146,20 @@ if (isset($_POST["btn_admin"])) {
                                 </div>
                             </div>
                         <?php } ?>
-
                         <div class="step-contents">
                             <div class="tab-1">
                                 <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-                                    <input type="hidden" name="license_code" value="<?php echo $license_code; ?>">
-                                    <input type="hidden" name="purchase_code" value="<?php echo $purchase_code; ?>">
                                     <div class="tab-content">
                                         <div class="tab_1">
                                             <h1 class="step-title">Settings</h1>
+                                            <?php $root = (isset($_SERVER['HTTPS']) ? "https://" : "http://") . $_SERVER['HTTP_HOST'];
+                                            $root .= str_replace(basename($_SERVER['SCRIPT_NAME']), '', $_SERVER['SCRIPT_NAME']);
+                                            $root = str_replace('install/', '', $root); ?>
+                                            <div class="form-group">
+                                                <label>Site URL (Examples: <span style='font-family: "Helvetica Neue", Helvetica, Arial, sans-serif'>https://abc.com, https://abc.com/blog, https://test.abc.com</span>)</label><br>
+                                                <input type="text" class="form-control form-input" name="base_url" placeholder="Base URL" value="<?php echo @$root; ?>" required>
+                                                <small class="text-danger">(If your site does not have SSL, you must enter your site URL with "http". Example: http://abc.com)</small>
+                                            </div>
                                             <div class="form-group">
                                                 <label for="email">Timezone</label>
                                                 <select name="timezone" class="form-control" required style="min-height: 44px;">
@@ -190,22 +188,18 @@ if (isset($_POST["btn_admin"])) {
                                             </div>
                                         </div>
                                     </div>
-
                                     <div class="buttons">
-                                        <a href="database.php?license_code=<?php echo $license_code; ?>&purchase_code=<?php echo $purchase_code; ?>" class="btn btn-success btn-custom pull-left">Prev</a>
+                                        <a href="database.php" class="btn btn-success btn-custom pull-left">Prev</a>
                                         <button type="submit" name="btn_admin" class="btn btn-success btn-custom pull-right">Finish</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 </body>
 </html>
-

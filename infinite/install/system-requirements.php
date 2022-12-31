@@ -1,13 +1,5 @@
 <?php
 require_once 'functions.php';
-
-$license_code = $_GET["license_code"];
-$purchase_code = $_GET["purchase_code"];
-
-if (!isset($license_code) || !isset($purchase_code)) {
-    header("Location: index.php");
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -40,10 +32,7 @@ if (!isset($license_code) || !isset($purchase_code)) {
 
             <div class="row">
                 <div class="col-sm-12">
-
                     <div class="install-box">
-
-
                         <div class="steps">
                             <div class="step-progress">
                                 <div class="step-progress-line" data-now-value="40" data-number-of-steps="5" style="width: 40%;"></div>
@@ -66,7 +55,7 @@ if (!isset($license_code) || !isset($purchase_code)) {
                             </div>
                             <div class="step">
                                 <div class="step-icon"><i class="fa fa-user"></i></div>
-                                <p>Admin</p>
+                                <p>Settings</p>
                             </div>
                         </div>
 
@@ -77,10 +66,10 @@ if (!isset($license_code) || !isset($purchase_code)) {
                                     <div class="col-sm-11">
                                         <p>
                                             <span class="req-span"><i class="fa fa-circle"></i>&nbsp;&nbsp;&nbsp;PHP Version:</span>
-                                            <?php if (phpversion() >= 5.6): ?>
+                                            <?php if (phpversion() >= 7.3): ?>
                                                 <strong class="color-success"><?php echo phpversion(); ?></strong>
                                             <?php else: ?>
-                                                <strong class="color-danger"><?php echo phpversion(); ?>&nbsp;<small>(Your PHP version must be 5.6 or greater)</small></strong>
+                                                <strong class="color-danger"><?php echo phpversion(); ?>&nbsp;<small>(Your PHP version must be 7.3 or greater)</small></strong>
                                             <?php endif; ?>
                                         </p>
                                         <p>
@@ -157,8 +146,8 @@ if (!isset($license_code) || !isset($purchase_code)) {
                                 </div>
 
                                 <div class="buttons">
-                                    <a href="index.php?license_code=<?php echo $license_code; ?>&purchase_code=<?php echo $purchase_code; ?>" class="btn btn-success btn-custom pull-left">Prev</a>
-                                    <a href="folder-permissions.php?license_code=<?php echo $license_code; ?>&purchase_code=<?php echo $purchase_code; ?>" class="btn btn-success btn-custom pull-right">Next</a>
+                                    <a href="index.php" class="btn btn-success btn-custom pull-left">Prev</a>
+                                    <a href="folder-permissions.php" class="btn btn-success btn-custom pull-right">Next</a>
                                 </div>
 
                             </div>
@@ -169,7 +158,6 @@ if (!isset($license_code) || !isset($purchase_code)) {
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

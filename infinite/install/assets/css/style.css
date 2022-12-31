@@ -175,6 +175,10 @@ body {
     margin-top: 0;
 }
 
+.alert {
+    text-align: left;
+}
+
 .alert strong {
     font-weight: 500 !important;
 }

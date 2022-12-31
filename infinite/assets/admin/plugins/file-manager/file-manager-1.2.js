@@ -3,6 +3,7 @@
 * IMAGES
 *------------------------------------------------------------------------------------------
 */
+var base_url = InfConfig.baseUrl + '/';
 var image_type = 'main';
 //update images
 $('#image_file_manager').on('show.bs.modal', function (e) {
@@ -28,10 +29,10 @@ $(document).on('click', '#image_file_manager .file-box', function () {
 //refresh images
 function refresh_images() {
     var data = {};
-    data[csfr_token_name] = $.cookie(csfr_cookie_name);
+    addCsrf(data);
     $.ajax({
         type: "POST",
-        url: base_url + "file_controller/get_images",
+        url: InfConfig.baseUrl + "/FileController/getImages",
         data: data,
         success: function (response) {
             document.getElementById("image_file_upload_response").innerHTML = response;
@@ -46,11 +47,10 @@ $(document).on('click', '#image_file_manager #btn_img_delete', function () {
     var data = {
         "file_id": file_id
     };
-    data[csfr_token_name] = $.cookie(csfr_cookie_name);
-
+    addCsrf(data);
     $.ajax({
         type: "POST",
-        url: base_url + "file_controller/delete_image_file",
+        url: InfConfig.baseUrl + "/FileController/deleteImageFile",
         data: data,
         success: function (response) {
             $('#btn_img_delete').hide();
@@ -88,7 +88,7 @@ function select_image() {
             $('#video_thumbnail_url').val('');
         }
     } else if (image_type == 'editor') {
-        tinymce.activeEditor.execCommand('mceInsertContent', false, '<p><img src="' + base_url + img_url + '" alt=""/></p>');
+        tinymce.activeEditor.execCommand('mceInsertContent', false, '<p><img src="' + base_url+ img_url + '" alt=""/></p>');
     } else {
         var image = '<div class="post-select-image-container">' +
             '<img src="' + base_url + img_url + '" alt="">' +
@@ -124,12 +124,12 @@ jQuery(function ($) {
                     }
                 });
                 var data = {
-                    'min': min
+                    'last_id': min
                 };
-                data[csfr_token_name] = $.cookie(csfr_cookie_name);
+                addCsrf(data);
                 $.ajax({
                     type: "POST",
-                    url: base_url + "file_controller/load_more_images",
+                    url: InfConfig.baseUrl + "/FileController/loadMoreImages",
                     data: data,
                     success: function (response) {
                         setTimeout(function () {
@@ -148,10 +148,10 @@ $(document).on('input', '#input_search_image', function () {
     var data = {
         "search": search
     };
-    data[csfr_token_name] = $.cookie(csfr_cookie_name);
+    addCsrf(data);
     $.ajax({
         type: "POST",
-        url: base_url + "file_controller/search_image_file",
+        url: InfConfig.baseUrl + "/FileController/searchImageFile",
         data: data,
         success: function (response) {
             if (search.length > 1) {
@@ -188,10 +188,10 @@ $(document).on('click', '#file_manager #btn_file_delete', function () {
     var data = {
         "file_id": file_id
     };
-    data[csfr_token_name] = $.cookie(csfr_cookie_name);
+    addCsrf(data);
     $.ajax({
         type: "POST",
-        url: base_url + "file_controller/delete_file",
+        url: InfConfig.baseUrl + "/FileController/deleteFile",
         data: data,
         success: function (response) {
             $('#btn_file_delete').hide();
@@ -236,10 +236,10 @@ function select_file() {
 //refresh files
 function refresh_files() {
     var data = {};
-    data[csfr_token_name] = $.cookie(csfr_cookie_name);
+    addCsrf(data);
     $.ajax({
         type: "POST",
-        url: base_url + "file_controller/get_files",
+        url: InfConfig.baseUrl + "/FileController/getFiles",
         data: data,
         success: function (response) {
             document.getElementById("file_upload_response").innerHTML = response;
@@ -264,12 +264,12 @@ jQuery(function ($) {
                     }
                 });
                 var data = {
-                    'min': min
+                    'last_id': min
                 };
-                data[csfr_token_name] = $.cookie(csfr_cookie_name);
+                addCsrf(data);
                 $.ajax({
                     type: "POST",
-                    url: base_url + "file_controller/load_more_files",
+                    url: InfConfig.baseUrl + "/FileController/loadMoreFiles",
                     data: data,
                     success: function (response) {
                         setTimeout(function () {
@@ -288,10 +288,10 @@ $(document).on('input', '#input_search_file', function () {
     var data = {
         "search": search
     };
-    data[csfr_token_name] = $.cookie(csfr_cookie_name);
+    addCsrf(data);
     $.ajax({
         type: "POST",
-        url: base_url + "file_controller/search_file",
+        url: InfConfig.baseUrl + "/FileController/searchFile",
         data: data,
         success: function (response) {
             if (search.length > 1) {

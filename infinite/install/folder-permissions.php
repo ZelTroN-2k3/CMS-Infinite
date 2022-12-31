@@ -1,13 +1,5 @@
 <?php
 require_once 'functions.php';
-
-$license_code = $_GET["license_code"];
-$purchase_code = $_GET["purchase_code"];
-
-if (!isset($license_code) || !isset($purchase_code)) {
-    header("Location: index.php");
-    exit();
-}
 ?>
 
 <!DOCTYPE html>
@@ -40,10 +32,7 @@ if (!isset($license_code) || !isset($purchase_code)) {
 
             <div class="row">
                 <div class="col-sm-12">
-
                     <div class="install-box">
-
-
                         <div class="steps">
                             <div class="step-progress">
                                 <div class="step-progress-line" data-now-value="60" data-number-of-steps="5" style="width: 60%;"></div>
@@ -66,7 +55,7 @@ if (!isset($license_code) || !isset($purchase_code)) {
                             </div>
                             <div class="step">
                                 <div class="step-icon"><i class="fa fa-user"></i></div>
-                                <p>Admin</p>
+                                <p>Settings</p>
                             </div>
                         </div>
 
@@ -75,8 +64,6 @@ if (!isset($license_code) || !isset($purchase_code)) {
                                 <h1 class="step-title">Folder Permissions</h1>
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <p><i class="fa fa-folder-open"></i> application/config</p>
-                                        <p><i class="fa fa-folder-open"></i> application/language</p>
                                         <p><i class="fa fa-folder-open"></i> uploads/blocks</p>
                                         <p><i class="fa fa-folder-open"></i> uploads/files</p>
                                         <p><i class="fa fa-folder-open"></i> uploads/gallery</p>
@@ -86,8 +73,6 @@ if (!isset($license_code) || !isset($purchase_code)) {
                                         <p><i class="fa fa-folder-open"></i> uploads/temp</p>
                                     </div>
                                     <div class="col-sm-6 text-right">
-                                        <p><?php if (is_writable('../application/config')) { ?><i class="fa fa-check color-success"></i><?php } else { ?><i class="fa fa-close color-danger"></i><?php } ?></p>
-                                        <p><?php if (is_writable('../application/language')) { ?><i class="fa fa-check color-success"></i><?php } else { ?><i class="fa fa-close color-danger"></i><?php } ?></p>
                                         <p><?php if (is_writable('../uploads/blocks')) { ?><i class="fa fa-check color-success"></i><?php } else { ?><i class="fa fa-close color-danger"></i><?php } ?></p>
                                         <p><?php if (is_writable('../uploads/files')) { ?><i class="fa fa-check color-success"></i><?php } else { ?><i class="fa fa-close color-danger"></i><?php } ?></p>
                                         <p><?php if (is_writable('../uploads/gallery')) { ?><i class="fa fa-check color-success"></i><?php } else { ?><i class="fa fa-close color-danger"></i><?php } ?></p>
@@ -98,8 +83,8 @@ if (!isset($license_code) || !isset($purchase_code)) {
                                     </div>
                                 </div>
                                 <div class="buttons">
-                                    <a href="system-requirements.php?license_code=<?php echo $license_code; ?>&purchase_code=<?php echo $purchase_code; ?>" class="btn btn-success btn-custom pull-left">Prev</a>
-                                    <a href="database.php?license_code=<?php echo $license_code; ?>&purchase_code=<?php echo $purchase_code; ?>" class="btn btn-success btn-custom pull-right">Next</a>
+                                    <a href="system-requirements.php" class="btn btn-success btn-custom pull-left">Prev</a>
+                                    <a href="database.php" class="btn btn-success btn-custom pull-right">Next</a>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +95,6 @@ if (!isset($license_code) || !isset($purchase_code)) {
         </div>
     </div>
 </div>
-
 
 </body>
 </html>

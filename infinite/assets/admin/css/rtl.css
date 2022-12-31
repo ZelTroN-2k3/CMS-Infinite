@@ -50,11 +50,33 @@ body {
     }
 
     .main-header {
-        background-color: #3C8DBC !important;
+        background-color: #222e33 !important;
+    }
+    .main-header {
+        -webkit-transition: all 250ms ease;
+        -moz-transition: all 250ms ease;
+        -ms-transition: all 250ms ease;
+        -o-transition: all 250ms ease;
+        transition: all 250ms ease;
+    }
+    .main-header .navbar {
+        -webkit-transition: all 250ms ease;
+        -moz-transition: all 250ms ease;
+        -ms-transition: all 250ms ease;
+        -o-transition: all 250ms ease;
+        transition: all 250ms ease;
     }
 
     .main-header .navbar-custom-menu, .main-header .navbar-right {
         float: left;
+    }
+
+    .main-sidebar {
+        -webkit-transition: all 250ms ease;
+        -moz-transition: all 250ms ease;
+        -ms-transition: all 250ms ease;
+        -o-transition: all 250ms ease;
+        transition: all 250ms ease;
     }
 
     .navbar-custom-menu {
@@ -74,10 +96,6 @@ body {
         margin-right: 260px;
         margin-left: 0;
     }
-}
-
-.main-header .logo {
-    background-color: #343B4A !important;
 }
 
 .small-box .icon {
@@ -363,12 +381,6 @@ div.tagsinput div {
 .callout {
     border-left: 0;
     border-right: 5px solid #eee;
-}
-
-.visual-color-box {
-    float: right;
-    margin-right: 0;
-    margin-left: 15px;
 }
 
 @media (max-width: 768px) {

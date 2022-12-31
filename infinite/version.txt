@@ -1,6 +1,6 @@
 Infinite - Blog & Magazine Script
 
-Version 4.0.2
+Version 4.2
 
 By Codingest
 

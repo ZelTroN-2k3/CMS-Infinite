@@ -3,15 +3,6 @@ error_reporting(0);
 require_once 'functions.php';
 
 if (isset($_POST["btn_install"])) {
-
-	$license_code = $_POST["license_code"];
-	$purchase_code = $_POST["purchase_code"];
-
-	if (!isset($license_code) || !isset($purchase_code)) {
-		header("Location: index.php");
-		exit();
-	}
-
 	$db_host = $_POST['db_host'];
 	$db_name = $_POST['db_name'];
 	$db_user = $_POST['db_user'];
@@ -42,19 +33,11 @@ if (isset($_POST["btn_install"])) {
 
 		// If no errors, redirect to index
 		if (!isset($message)) {
-			header("Refresh: 15; admin.php?license_code=" . $license_code . "&purchase_code=" . $purchase_code);
+			header("Refresh: 15; admin.php");
 			$installing = 1;
 		}
 	} else {
 		$message = $core->show_message('error', 'Not all fields have been filled in correctly. The host, username, password, and database name are required.');
-	}
-} else {
-	$license_code = $_GET["license_code"];
-	$purchase_code = $_GET["purchase_code"];
-
-	if (!isset($license_code) || !isset($purchase_code)) {
-		header("Location: index.php");
-		exit();
 	}
 }
 
@@ -114,7 +97,7 @@ if (isset($_POST["btn_install"])) {
 							</div>
 							<div class="step">
 								<div class="step-icon"><i class="fa fa-user"></i></div>
-								<p>Admin</p>
+								<p>Settings</p>
 							</div>
 						</div>
 
@@ -146,8 +129,6 @@ if (isset($_POST["btn_install"])) {
 						<div class="step-contents">
 							<div class="tab-1">
 								<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
-									<input type="hidden" name="license_code" value="<?php echo $license_code; ?>">
-									<input type="hidden" name="purchase_code" value="<?php echo $purchase_code; ?>">
 									<div class="tab-content">
 										<div class="tab_1">
 											<h1 class="step-title">Database</h1>
@@ -175,7 +156,7 @@ if (isset($_POST["btn_install"])) {
 										</div>
 									</div>
 									<div class="buttons">
-										<a href="folder-permissions.php?license_code=<?php echo $license_code; ?>&purchase_code=<?php echo $purchase_code; ?>" class="btn btn-success btn-custom pull-left">Prev</a>
+										<a href="folder-permissions.php" class="btn btn-success btn-custom pull-left">Prev</a>
 										<button type="submit" name="btn_install" class="btn btn-success btn-custom pull-right">Next</button>
 									</div>
 								</form>

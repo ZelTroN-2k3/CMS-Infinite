@@ -3,9 +3,12 @@ require_once 'functions.php';
 if (file_exists('../license.php')) {
     include '../license.php';
 }
-
-if (!empty($license_array) && !empty($license_array["purchase_code"]) && !empty($license_array["license_code"])) {
-    header("Location: system-requirements.php?license_code=" . $license_array["license_code"] . "&purchase_code=" . $license_array["purchase_code"]);
+if (!file_exists('../.env')) {
+    echo "The .env file does not exist in the main directory of your website. Upload the .env file to start the installation.";
+    exit();
+}
+if (!is_writable('../.env')) {
+    echo "The .env file is not writable. Please set the file permissions of this file to 0644 or 0755.";
     exit();
 }
 
@@ -13,33 +16,8 @@ if (!function_exists('curl_init')) {
     $error = 'cURL is not available on your server! Please enable cURL to continue the installation. You can read the documentation for more information.';
 }
 if (isset($_POST["btn_license_code"])) {
-    $license_code = $_POST['license_code'];
-    $purchase_code = "";
-    $response = "";
-
-    $current_url = currentUrl($_SERVER);
-    $data = verify_license($license_code, $current_url);
-
-    if (!empty($data)) {
-        if ($data->code == "error") {
-            $error = "Invalid License Code!";
-        } else {
-            $purchase_code = $data->code;
-            header("Location: system-requirements.php?license_code=" . $license_code . "&purchase_code=" . $purchase_code);
-            exit();
-        }
-    } else {
-        $error = "Invalid License Code!";
-    }
-}
-
-
-if (!isset($license_code)) {
-    if (isset($_GET["license_code"])) {
-        $license_code = $_GET["license_code"];
-    } else {
-        $license_code = "";
-    }
+    header("Location: system-requirements.php");
+    exit();
 }
 ?>
 
@@ -97,7 +75,7 @@ if (!isset($license_code)) {
                             </div>
                             <div class="step">
                                 <div class="step-icon"><i class="fa fa-user"></i></div>
-                                <p>Admin</p>
+                                <p>Settings</p>
                             </div>
                         </div>
 
@@ -117,7 +95,7 @@ if (!isset($license_code)) {
                                             <h1 class="step-title">Start</h1>
                                             <div class="form-group">
                                                 <div class="alert alert-success" role="alert" style="font-size: 15px;">
-                                                    Infinite is a multi-purpose blog-magazine script. It has clean, responsive and user-friendly design. You can manage your posts, custom pages, categories, user comments, advanced settings and contact messages with its powerful Admin panel. Also it has a useful ad management system. You can manage your ad spaces with this system. It is secured, seo optimized, fast and easy to use.
+                                                    If you don't have a <b>license code</b>, please go to our help desk and generate your license code. You can easily manage your licenses through this system and you can contact us by opening a ticket for any problem.
                                                 </div>
                                             </div>
                                         </div>

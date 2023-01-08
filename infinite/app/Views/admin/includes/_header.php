@@ -127,10 +127,10 @@
                         <a href="<?= adminUrl('pages'); ?>"><i class="fa fa-leaf" aria-hidden="true"></i> <span class="label-name"><?= trans("pages"); ?></span></a>
                     </li>
                 <?php endif;
-                if (hasPermission('add_post')): ?>
-                    <li class="treeview<?= isAdminNavActive(['add-post', 'add-video']); ?>">
+                if (hasPermission('manage_all_posts') || hasPermission('add_post')): ?>
+                    <li class="treeview<?= isAdminNavActive(['add-post', 'add-video', 'posts', 'slider-posts', 'our-picks', 'pending-posts', 'update-post', 'auto-post-deletion', 'drafts']); ?>">
                         <a href="#">
-                            <i class="fa fa-file-text-o"></i> <span class="label-name"><?= trans("add_post"); ?></span><span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span>
+                            <i class="fa fa-bars"></i> <span class="label-name"><?= trans("posts"); ?></span><span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span>
                         </a>
                         <ul class="treeview-menu">
                             <li class="nav-add-post">
@@ -139,15 +139,6 @@
                             <li class="nav-add-video">
                                 <a href="<?= adminUrl('add-video'); ?>"><?= trans("add_video"); ?></a>
                             </li>
-                        </ul>
-                    </li>
-                <?php endif;
-                if (hasPermission('manage_all_posts') || hasPermission('add_post')): ?>
-                    <li class="treeview<?= isAdminNavActive(['posts', 'slider-posts', 'our-picks', 'pending-posts', 'update-post', 'auto-post-deletion', 'drafts']); ?>">
-                        <a href="#">
-                            <i class="fa fa-bars"></i> <span class="label-name"><?= trans("posts"); ?></span><span class="pull-right-container"><i class="fa fa-angle-right pull-right"></i></span>
-                        </a>
-                        <ul class="treeview-menu">
                             <li class="nav-posts">
                                 <a href="<?= adminUrl('posts'); ?>"><?= trans("posts"); ?></a>
                             </li>
